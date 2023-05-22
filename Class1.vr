@@ -1,0 +1,208 @@
+﻿Using System
+Using System.Collections
+Using System.Text
+Using System.Web.UI.WebControls
+
+BegClass Program
+
+	BegSr Main Shared(*Yes) Access(*Public) Attributes(System.STAThread())
+		DclSrParm args Type(*String) Rank(1)
+
+		(*New Test()).Run()
+
+		Console.WriteLine('Press any key to continue...') 
+		Console.Readkey()
+	EndSr
+EndClass
+
+BegClass Test 
+
+	BegSr Run Access(*Public) 
+		//StringBuilder()
+		//NumericDataConversion()
+		DateDataTypeFormatting()
+		//DateDataConversion()
+		//DateMath()
+		//DateMathBetter()
+		//ConvertDateToNumeric()
+		//ListItemCollection()
+	EndSr
+
+	BegSr StringBuilder
+		DclFld sb Type(System.Text.StringBuilder) New()
+
+		sb.Append('1. John ') 
+		sb.Append('2. George ') 
+		sb.Append('3. Ringo' ) 
+		sb.Append('4. Paul' ) 
+
+		// Show what happens if you leave () off of ToString! 
+		Console.WriteLine(sb.ToString()) 
+	EndSr 
+
+	BegSr NumericDataConversion
+		DclFld VarPacked Type(*Packed) Len(12,2)
+
+		// https://asna.com/en/kb/avr-data-types/
+		// Show underlying .NET data type of AVR's *Packed
+		// Console.WriteLine(VarPacked.GetType().FullName)
+
+		// Convert string to numeric.
+		VarPacked = '12234.34' // Note that AVR impliclity coerces the string value into the packed value.
+		// Alternatively (and probably better) 
+		// VarPacked = Convert.ToDecimal('12234.34')
+
+		Console.WriteLine(VarPacked) 
+
+		// Formatting a numeric value
+		Console.WriteLine(VarPacked.ToString('#,###.00'))		
+	EndSr 
+
+	BegSr DateDataTypeFormatting
+		DclFld InvoiceDue Type(System.DateTime) 
+		
+		// https://learn.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
+
+		InvoiceDue = *New DateTime(2023, 6, 2) 
+		Console.WriteLine(InvoiceDue) 
+
+		// Check the link above for the difference between 'mm' and 'MM'. 
+		Console.WriteLine(InvoiceDue.ToString('MM-dd-yyyy')) 
+	EndSr
+
+	BegSr DateDataConversion
+		DclFld MyDate Type(*Zoned) Len(8,0)
+		DclFld FormattedDate Type(*String )
+ 
+		MyDate = 6021959
+ 
+		FormattedDate = MyDate.ToString('00/00/0000')
+		Console.WriteLine(FormattedDate) 
+
+		DclFld InvoiceDue Type(System.DateTime) 
+
+		InvoiceDue = DateTime.Parse(FormattedDate) 
+		Console.WriteLine(InvoiceDue.ToString('MM-dd-yyyy')) 
+	EndSr  
+
+	BegSr DateMath
+		DclConst  mmddyyyyy Value('MM/dd/yyyy') 
+
+		DclFld InvoiceDueDate Type(*Integer4) 
+		DclFld Today Type(System.DateTime) 
+		DclFLd WorkDate Type(System.DateTime) 
+		DclFld DaysPastDue Type(*Integer4) 
+
+		InvoiceDueDate = 4232023
+
+		WorkDate = DateTime.Parse(InvoiceDueDate.ToString('00/00/0000'))
+
+		Today = DateTime.Now()
+
+		DclFld ts Type(System.TimeSpan)
+
+		ts = Today.Subtract(WorkDate) 
+		DaysPastDue = ts.Days
+
+		Console.WriteLine('Invoice dated {0} is {1} day(s) past due as of {2}', +
+		                      InvoiceDueDate.ToString('00/00/0000'), + 
+							  DaysPastDue.ToString('#,###'), +
+							  Today.ToString(mmddyyyyy)) 
+	EndSr
+
+	BegSr DateMathBetter
+		DclFld InvoiceDueDate Type(*Integer4) 
+		
+		DclFld DaysPastDue Type(*Integer4) 
+
+		InvoiceDueDate = 4232023
+
+		DaysPastDue = GetDatesDayDifference(DateTime.Now(), ConvertNumericMMDDYYYToDate(InvoiceDueDate)) 
+		
+		Console.WriteLine('Invoice dated {0} is {1} day(s) past due as of {2}', +
+		                      InvoiceDueDate.ToString('00/00/0000'), + 
+							  DaysPastDue.ToString('#,###'), +
+							  DateTime.Now().ToString('MM-dd-yyyy')) 
+	EndSr
+
+	BegSr ConvertDateToNumeric 
+		DclFld Today Type(DateTime) 
+		DclFld NumericDate Type(*Integer4) 
+
+		Today = DateTime.Now
+
+		NumericDate = ConvertDateToNumericMMDDYYYYDate(Today)
+
+		Console.WriteLine(NumericDate) 
+	EndSr
+
+	BegFunc GetDatesDayDifference Type(*Integer4) 
+		DclSrParm BaseDate Type(DateTime) 
+		DclSRParm PastDate Type(DateTime) 
+
+		DclFld ts Type(System.TimeSpan)
+
+		ts = BaseDate.Subtract(PastDate) 
+		LeaveSr ts.Days
+	EndFunc 
+
+	BegFunc ConvertNumericMMDDYYYToDate Type(DateTime) 
+		DclSrParm InputNumericDate Type(*Zoned) Len(8,0)
+
+		LeaveSr DateTime.Parse(InputNumericDate.ToString('00/00/0000'))
+	EndFunc 
+
+	BegFunc ConvertDateToNumericMMDDYYYYDate Type(*Integer4) 
+		DclSrParm InputDate Type(DateTime) 
+
+		DclFld Result Type(*Integer4) 
+
+		Result = InputDate.ToString('MMddyyyy') 
+		LeaveSr Result 
+	EndFunc 
+
+	BegSr ListItemCollection 
+		DclFld li Type(System.Web.UI.WebControls.ListItem) 
+
+		li = *New ListItem()
+		li.Text = 'Indiana' 
+		li.Value = 'IN'
+
+		Console.WriteLine(String.Format('Text = {0}, Value = {1}', li.Text, li.Value))
+	EndSr
+
+
+
+EndClass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
