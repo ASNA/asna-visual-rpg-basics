@@ -1,5 +1,6 @@
 ﻿Using System
 Using System.Collections
+Using System.Collections.Generic
 Using System.Text
 Using System.Web.UI.WebControls
 
@@ -16,15 +17,16 @@ BegClass Program
 EndClass
 
 BegClass Test 
-
 	BegSr Run Access(*Public) 
 		//StringBuilder()
 		//NumericDataConversion()
-		DateDataTypeFormatting()
+		//DateDataTypeFormatting()
 		//DateDataConversion()
 		//DateMath()
 		//DateMathBetter()
 		//ConvertDateToNumeric()
+		//WorkWithGenericCollections()
+		WorkingWithSystemDotObject()		
 		//ListItemCollection()
 	EndSr
 
@@ -161,6 +163,66 @@ BegClass Test
 		LeaveSr Result 
 	EndFunc 
 
+	BegSr WorkWithGenericCollections
+		DclFld Beatles Type(List(*Of *String)) New()
+
+		Beatles.Add('John')
+		Beatles.Add('George')
+		Beatles.Add('Ringo')
+		Beatles.Add('Paul')
+
+		ForEach Beatle Type(*String) Collection(Beatles) 
+			Console.WriteLine(Beatle) 
+		EndFor 
+
+		// It's common to need to create an array of an undetermine size. 
+
+		DclArray theBeatles Type(*String) Rank(1) 
+
+		// The ToArray method of a generic collection returns an array 
+		// dynamically sized to the number of entries in the collection.
+		theBeatles = Beatles.ToArray()
+
+		// For more on ranked arrays:
+		// https://asna.com/en/kb/dynamic-arrays/
+	EndSr
+
+	BegSr WorkingWithSystemDotObject
+		DclFld myVar Type(*Object) 
+
+		DclFLd myVarString Type(*String) 
+		DclFld myVarPacked  Type(*Packed) Len(8,0)
+		DclFld myVarDate Type(DateTime) 
+		DclFld myVarInt Type(*Integer4) 
+
+		// You can assign any time to myAvr 
+		// myVar is said to be loosely typed.
+
+		myVar = "Roger"
+		// This works:
+		Console.WriteLine(myVar) 
+		// This does not! 
+		// myVarString = myVar 
+
+		// Either of these do work.
+		myVarString = myVar *As *String
+		myVarString = myVar.ToString()
+		Console.WriteLine(myVarString) 
+
+		// Note that AVR numeric literals are System.Decimal; they are not integers.
+		myVar = 123
+		myVarPacked = myVar *As System.Decimal 
+		Console.WriteLine(myVarPacked) 
+
+		myVar = 123 *As *Integer4 // Because AVR numeric literals are System.Decimal, you need to 
+		                          // cast 123 as an integer for this to assign an integer, not a decimal.
+        Console.WriteLine(myVar *As *Integer4) 
+
+		myVar = DateTime.Now()
+		myVarDate = myVar *As DateTime 
+		Console.WriteLine(myVarDate.ToString('yyyy-MM-dd'))
+	EndSr
+
 	BegSr ListItemCollection 
 		DclFld li Type(System.Web.UI.WebControls.ListItem) 
 
@@ -170,8 +232,6 @@ BegClass Test
 
 		Console.WriteLine(String.Format('Text = {0}, Value = {1}', li.Text, li.Value))
 	EndSr
-
-
 
 EndClass
 

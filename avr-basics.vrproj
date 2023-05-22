@@ -43,12 +43,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.vr">
-      <SubType>Code</SubType>
+      <SubType>
+      </SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.vr" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\ASNA\VisualRPG\v11.2\ASNA.VisualRPG.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

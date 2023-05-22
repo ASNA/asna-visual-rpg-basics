@@ -28,6 +28,14 @@ A better way to perform date math (using functions).
 
 Convert a date data type into a numeric value.
 
+### WorkWithGenericCollections()
+
+Using generic collections.
+
+### WorkingWithSystemDotObject
+
+Using System.Object (*Object in AVR)
+
 ### ListItemCollection()
 
 Using the System.Web.UI.Controls ListItem and ListItemCollection class.
