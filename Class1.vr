@@ -6,232 +6,280 @@ Using System.Web.UI.WebControls
 
 BegClass Program
 
-	BegSr Main Shared(*Yes) Access(*Public) Attributes(System.STAThread())
-		DclSrParm args Type(*String) Rank(1)
+    BegSr Main Shared(*Yes) Access(*Public) Attributes(System.STAThread())
+        DclSrParm args Type(*String) Rank(1)
 
-		(*New Test()).Run()
+        (*New Test()).Run()
 
-		Console.WriteLine('Press any key to continue...') 
-		Console.Readkey()
-	EndSr
+        Console.WriteLine('Press any key to continue...') 
+        Console.Readkey()
+    EndSr
 EndClass
 
 BegClass Test 
-	BegSr Run Access(*Public) 
-		//StringBuilder()
-		//NumericDataConversion()
-		//DateDataTypeFormatting()
-		//DateDataConversion()
-		//DateMath()
-		//DateMathBetter()
-		//ConvertDateToNumeric()
-		//WorkWithGenericCollections()
-		WorkingWithSystemDotObject()		
-		//ListItemCollection()
-	EndSr
+    BegSr Run Access(*Public) 
+        //StringBuilder()
+        //NumericDataConversion()
+        //DateDataTypeFormatting()
+        //DateDataConversion()
+        //DateMath()
+        //DateMathBetter()
+        //ConvertDateToNumeric()
+        //WorkWithGenericCollections()
+        //WorkingWithSystemDotObject()		
+        //ListItemCollection()
+        //TestForNumeric()
+        TestPassByRef()
+    EndSr
 
-	BegSr StringBuilder
-		DclFld sb Type(System.Text.StringBuilder) New()
+    BegSr TestForNumeric
+        DclFld Value Type(*String) 
+        DclFld Int Type(*Integer4) 
 
-		sb.Append('1. John ') 
-		sb.Append('2. George ') 
-		sb.Append('3. Ringo' ) 
-		sb.Append('4. Paul' ) 
+        Value = '4564'
 
-		// Show what happens if you leave () off of ToString! 
-		Console.WriteLine(sb.ToString()) 
-	EndSr 
+        Int = ConvertToNumeric(Value) 
+        If Int = Int32.MaxValue
+            // Failed to convert.
+        EndIf 
+    EndSr 
 
-	BegSr NumericDataConversion
-		DclFld VarPacked Type(*Packed) Len(12,2)
+    BegFunc ConvertToNumeric Type(*Integer4) 
+        DclSrParm Value Type(*String) 
 
-		// https://asna.com/en/kb/avr-data-types/
-		// Show underlying .NET data type of AVR's *Packed
-		// Console.WriteLine(VarPacked.GetType().FullName)
+        DclFld Int Type(*Integer4) 
 
-		// Convert string to numeric.
-		VarPacked = '12234.34' // Note that AVR impliclity coerces the string value into the packed value.
-		// Alternatively (and probably better) 
-		// VarPacked = Convert.ToDecimal('12234.34')
+        DclFld Result Type(*Boolean) 
 
-		Console.WriteLine(VarPacked) 
+        Result = Int32.TryParse(Value, *ByRef Int) 
+        If NOT Result
+            Int = Int32.MaxValue
+        EndIf 
 
-		// Formatting a numeric value
-		Console.WriteLine(VarPacked.ToString('#,###.00'))		
-	EndSr 
+        LeaveSr Int
+    EndFunc 
 
-	BegSr DateDataTypeFormatting
-		DclFld InvoiceDue Type(System.DateTime) 
-		
-		// https://learn.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
+    BegSr TestPassByRef
+        DclFld a Type(*String) 
+        DclFld b Type(*Char) Len(10)
 
-		InvoiceDue = *New DateTime(2023, 6, 2) 
-		Console.WriteLine(InvoiceDue) 
+        a = 'x'
+        b = 'x'
 
-		// Check the link above for the difference between 'mm' and 'MM'. 
-		Console.WriteLine(InvoiceDue.ToString('MM-dd-yyyy')) 
-	EndSr
+        DclFld Name Type(*String)
+        Name = 'neil young'
 
-	BegSr DateDataConversion
-		DclFld MyDate Type(*Zoned) Len(8,0)
-		DclFld FormattedDate Type(*String )
+        ToUpperCase(*ByRef Name) 
+    EndSr
+
+    BegSr ToUpperCase 
+        DclSrParm Name Type(*String) By(*Reference) 
+
+        Name = Name.ToUpper()
+    EndSr
+
+    BegSr StringBuilder
+        DclFld sb Type(System.Text.StringBuilder) New()
+
+        sb.Append('1. John ') 
+        sb.Append('2. George ') 
+        sb.Append('3. Ringo' ) 
+        sb.Append('4. Paul' ) 
+
+        // Show what happens if you leave () off of ToString! 
+        Console.WriteLine(sb.ToString()) 
+    EndSr 
+
+    BegSr NumericDataConversion
+        DclFld VarPacked Type(*Packed) Len(12,2)
+
+        // https://asna.com/en/kb/avr-data-types/
+        // Show underlying .NET data type of AVR's *Packed
+        // Console.WriteLine(VarPacked.GetType().FullName)
+
+        // Convert string to numeric.
+        VarPacked = '12234.34' // Note that AVR impliclity coerces the string value into the packed value.
+        // Alternatively (and probably better) 
+        // VarPacked = Convert.ToDecimal('12234.34')
+
+        Console.WriteLine(VarPacked) 
+
+        // Formatting a numeric value
+        Console.WriteLine(VarPacked.ToString('#,###.00'))		
+    EndSr 
+
+    BegSr DateDataTypeFormatting
+        DclFld InvoiceDue Type(System.DateTime) 
+        
+        // https://learn.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
+
+        InvoiceDue = *New DateTime(2023, 6, 2) 
+        Console.WriteLine(InvoiceDue) 
+
+        // Check the link above for the difference between 'mm' and 'MM'. 
+        Console.WriteLine(InvoiceDue.ToString('MM-dd-yyyy')) 
+    EndSr
+
+    BegSr DateDataConversion
+        DclFld MyDate Type(*Zoned) Len(8,0)
+        DclFld FormattedDate Type(*String )
  
-		MyDate = 6021959
+        MyDate = 6021959
  
-		FormattedDate = MyDate.ToString('00/00/0000')
-		Console.WriteLine(FormattedDate) 
+        FormattedDate = MyDate.ToString('00/00/0000')
+        Console.WriteLine(FormattedDate) 
 
-		DclFld InvoiceDue Type(System.DateTime) 
+        DclFld InvoiceDue Type(System.DateTime) 
 
-		InvoiceDue = DateTime.Parse(FormattedDate) 
-		Console.WriteLine(InvoiceDue.ToString('MM-dd-yyyy')) 
-	EndSr  
+        InvoiceDue = DateTime.Parse(FormattedDate) 
+        Console.WriteLine(InvoiceDue.ToString('MM-dd-yyyy')) 
+    EndSr  
 
-	BegSr DateMath
-		DclConst  mmddyyyyy Value('MM/dd/yyyy') 
+    BegSr DateMath
+        DclConst  mmddyyyyy Value('MM/dd/yyyy') 
 
-		DclFld InvoiceDueDate Type(*Integer4) 
-		DclFld Today Type(System.DateTime) 
-		DclFLd WorkDate Type(System.DateTime) 
-		DclFld DaysPastDue Type(*Integer4) 
+        DclFld InvoiceDueDate Type(*Integer4) 
+        DclFld Today Type(System.DateTime) 
+        DclFLd WorkDate Type(System.DateTime) 
+        DclFld DaysPastDue Type(*Integer4) 
 
-		InvoiceDueDate = 4232023
+        InvoiceDueDate = 4232023
 
-		WorkDate = DateTime.Parse(InvoiceDueDate.ToString('00/00/0000'))
+        WorkDate = DateTime.Parse(InvoiceDueDate.ToString('00/00/0000'))
 
-		Today = DateTime.Now()
+        Today = DateTime.Now()
 
-		DclFld ts Type(System.TimeSpan)
+        DclFld ts Type(System.TimeSpan)
 
-		ts = Today.Subtract(WorkDate) 
-		DaysPastDue = ts.Days
+        ts = Today.Subtract(WorkDate) 
+        DaysPastDue = ts.Days
 
-		Console.WriteLine('Invoice dated {0} is {1} day(s) past due as of {2}', +
-		                      InvoiceDueDate.ToString('00/00/0000'), + 
-							  DaysPastDue.ToString('#,###'), +
-							  Today.ToString(mmddyyyyy)) 
-	EndSr
+        Console.WriteLine('Invoice dated {0} is {1} day(s) past due as of {2}', +
+                              InvoiceDueDate.ToString('00/00/0000'), + 
+                              DaysPastDue.ToString('#,###'), +
+                              Today.ToString(mmddyyyyy)) 
+    EndSr
 
-	BegSr DateMathBetter
-		DclFld InvoiceDueDate Type(*Integer4) 
-		
-		DclFld DaysPastDue Type(*Integer4) 
+    BegSr DateMathBetter
+        DclFld InvoiceDueDate Type(*Integer4) 
+        
+        DclFld DaysPastDue Type(*Integer4) 
 
-		InvoiceDueDate = 4232023
+        InvoiceDueDate = 4232023
 
-		DaysPastDue = GetDatesDayDifference(DateTime.Now(), ConvertNumericMMDDYYYToDate(InvoiceDueDate)) 
-		
-		Console.WriteLine('Invoice dated {0} is {1} day(s) past due as of {2}', +
-		                      InvoiceDueDate.ToString('00/00/0000'), + 
-							  DaysPastDue.ToString('#,###'), +
-							  DateTime.Now().ToString('MM-dd-yyyy')) 
-	EndSr
+        DaysPastDue = GetDatesDayDifference(DateTime.Now(), ConvertNumericMMDDYYYToDate(InvoiceDueDate)) 
+        
+        Console.WriteLine('Invoice dated {0} is {1} day(s) past due as of {2}', +
+                              InvoiceDueDate.ToString('00/00/0000'), + 
+                              DaysPastDue.ToString('#,###'), +
+                              DateTime.Now().ToString('MM-dd-yyyy')) 
+    EndSr
 
-	BegSr ConvertDateToNumeric 
-		DclFld Today Type(DateTime) 
-		DclFld NumericDate Type(*Integer4) 
+    BegSr ConvertDateToNumeric 
+        DclFld Today Type(DateTime) 
+        DclFld NumericDate Type(*Integer4) 
 
-		Today = DateTime.Now
+        Today = DateTime.Now
 
-		NumericDate = ConvertDateToNumericMMDDYYYYDate(Today)
+        NumericDate = ConvertDateToNumericMMDDYYYYDate(Today)
 
-		Console.WriteLine(NumericDate) 
-	EndSr
+        Console.WriteLine(NumericDate) 
+    EndSr
 
-	BegFunc GetDatesDayDifference Type(*Integer4) 
-		DclSrParm BaseDate Type(DateTime) 
-		DclSRParm PastDate Type(DateTime) 
+    BegFunc GetDatesDayDifference Type(*Integer4) 
+        DclSrParm BaseDate Type(DateTime) 
+        DclSRParm PastDate Type(DateTime) 
 
-		DclFld ts Type(System.TimeSpan)
+        DclFld ts Type(System.TimeSpan)
 
-		ts = BaseDate.Subtract(PastDate) 
-		LeaveSr ts.Days
-	EndFunc 
+        ts = BaseDate.Subtract(PastDate) 
+        LeaveSr ts.Days
+    EndFunc 
 
-	BegFunc ConvertNumericMMDDYYYToDate Type(DateTime) 
-		DclSrParm InputNumericDate Type(*Zoned) Len(8,0)
+    BegFunc ConvertNumericMMDDYYYToDate Type(DateTime) 
+        DclSrParm InputNumericDate Type(*Zoned) Len(8,0)
 
-		LeaveSr DateTime.Parse(InputNumericDate.ToString('00/00/0000'))
-	EndFunc 
+        LeaveSr DateTime.Parse(InputNumericDate.ToString('00/00/0000'))
+    EndFunc 
 
-	BegFunc ConvertDateToNumericMMDDYYYYDate Type(*Integer4) 
-		DclSrParm InputDate Type(DateTime) 
+    BegFunc ConvertDateToNumericMMDDYYYYDate Type(*Integer4) 
+        DclSrParm InputDate Type(DateTime) 
 
-		DclFld Result Type(*Integer4) 
+        DclFld Result Type(*Integer4) 
 
-		Result = InputDate.ToString('MMddyyyy') 
-		LeaveSr Result 
-	EndFunc 
+        Result = InputDate.ToString('MMddyyyy') 
+        LeaveSr Result 
+    EndFunc 
 
-	BegSr WorkWithGenericCollections
-		DclFld Beatles Type(List(*Of *String)) New()
+    BegSr WorkWithGenericCollections
+        DclFld Beatles Type(List(*Of *String)) New()
 
-		Beatles.Add('John')
-		Beatles.Add('George')
-		Beatles.Add('Ringo')
-		Beatles.Add('Paul')
+        Beatles.Add('John')
+        Beatles.Add('George')
+        Beatles.Add('Ringo')
+        Beatles.Add('Paul')
 
-		ForEach Beatle Type(*String) Collection(Beatles) 
-			Console.WriteLine(Beatle) 
-		EndFor 
+        ForEach Beatle Type(*String) Collection(Beatles) 
+            Console.WriteLine(Beatle) 
+        EndFor 
 
-		// It's common to need to create an array of an undetermine size. 
+        // It's common to need to create an array of an undetermine size. 
 
-		DclArray theBeatles Type(*String) Rank(1) 
+        DclArray theBeatles Type(*String) Rank(1) 
 
-		// The ToArray method of a generic collection returns an array 
-		// dynamically sized to the number of entries in the collection.
-		theBeatles = Beatles.ToArray()
+        // The ToArray method of a generic collection returns an array 
+        // dynamically sized to the number of entries in the collection.
+        theBeatles = Beatles.ToArray()
 
-		// For more on ranked arrays:
-		// https://asna.com/en/kb/dynamic-arrays/
-	EndSr
+        // For more on ranked arrays:
+        // https://asna.com/en/kb/dynamic-arrays/
+    EndSr
 
-	BegSr WorkingWithSystemDotObject
-		DclFld myVar Type(*Object) 
+    BegSr WorkingWithSystemDotObject
+        DclFld myVar Type(*Object) 
 
-		DclFLd myVarString Type(*String) 
-		DclFld myVarPacked  Type(*Packed) Len(8,0)
-		DclFld myVarDate Type(DateTime) 
-		DclFld myVarInt Type(*Integer4) 
+        DclFLd myVarString Type(*String) 
+        DclFld myVarPacked  Type(*Packed) Len(8,0)
+        DclFld myVarDate Type(DateTime) 
+        DclFld myVarInt Type(*Integer4) 
 
-		// You can assign any time to myAvr 
-		// myVar is said to be loosely typed.
+        // You can assign any time to myAvr 
+        // myVar is said to be loosely typed.
 
-		myVar = "Roger"
-		// This works:
-		Console.WriteLine(myVar) 
-		// This does not! 
-		// myVarString = myVar 
+        myVar = "Roger"
+        // This works:
+        Console.WriteLine(myVar) 
+        // This does not! 
+        // myVarString = myVar 
 
-		// Either of these do work.
-		myVarString = myVar *As *String
-		myVarString = myVar.ToString()
-		Console.WriteLine(myVarString) 
+        // Either of these do work.
+        myVarString = myVar *As *String
+        myVarString = myVar.ToString()
+        Console.WriteLine(myVarString) 
 
-		// Note that AVR numeric literals are System.Decimal; they are not integers.
-		myVar = 123
-		myVarPacked = myVar *As System.Decimal 
-		Console.WriteLine(myVarPacked) 
+        // Note that AVR numeric literals are System.Decimal; they are not integers.
+        myVar = 123
+        myVarPacked = myVar *As System.Decimal 
+        Console.WriteLine(myVarPacked) 
 
-		myVar = 123 *As *Integer4 // Because AVR numeric literals are System.Decimal, you need to 
-		                          // cast 123 as an integer for this to assign an integer, not a decimal.
+        myVar = 123 *As *Integer4 // Because AVR numeric literals are System.Decimal, you need to 
+                                  // cast 123 as an integer for this to assign an integer, not a decimal.
         Console.WriteLine(myVar *As *Integer4) 
 
-		myVar = DateTime.Now()
-		myVarDate = myVar *As DateTime 
-		Console.WriteLine(myVarDate.ToString('yyyy-MM-dd'))
-	EndSr
+        myVar = DateTime.Now()
+        myVarDate = myVar *As DateTime 
+        Console.WriteLine(myVarDate.ToString('yyyy-MM-dd'))
+    EndSr
 
-	BegSr ListItemCollection 
-		DclFld li Type(System.Web.UI.WebControls.ListItem) 
+    BegSr ListItemCollection 
+        DclFld li Type(System.Web.UI.WebControls.ListItem) 
 
-		li = *New ListItem()
-		li.Text = 'Indiana' 
-		li.Value = 'IN'
+        li = *New ListItem()
+        li.Text = 'Indiana' 
+        li.Value = 'IN'
 
-		Console.WriteLine(String.Format('Text = {0}, Value = {1}', li.Text, li.Value))
-	EndSr
+        Console.WriteLine(String.Format('Text = {0}, Value = {1}', li.Text, li.Value))
+    EndSr
 
 EndClass
 
